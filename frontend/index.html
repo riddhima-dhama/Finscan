@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FinScan - Fraud Detection</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- HEADER -->
+        <header>
+            <div>
+                <h1>FinScan</h1>
+                <p>Finite Automata Based Fraud Detection System</p>
+            </div>
+
+            <div class="status">
+                <span class="status-dot"></span>
+                System Online
+            </div>
+        </header>
+
+
+        <!-- STAT CARDS -->
+        <section class="stats">
+
+            <div class="card">
+                <h3>Total Transactions</h3>
+                <div class="number" id="totalTransactions">0</div>
+            </div>
+
+            <div class="card">
+                <h3>Normal Transactions</h3>
+                <div class="number normal" id="normalTransactions">0</div>
+            </div>
+
+            <div class="card">
+                <h3>Fraud Alerts</h3>
+                <div class="number danger" id="fraudTransactions">0</div>
+            </div>
+
+            <div class="card">
+                <h3>Detection Engine</h3>
+                <div class="engine">ACTIVE</div>
+            </div>
+
+        </section>
+
+
+        <!-- ALERT -->
+        <section id="alertBox" class="alert hidden">
+
+            <div>
+                <h2>🚨 Fraud Detected</h2>
+
+                <p>
+                    Rule:
+                    <strong id="fraudRule">-</strong>
+                </p>
+
+                <p>
+                    Symbol Sequence:
+                    <strong id="symbolSequence">-</strong>
+                </p>
+            </div>
+
+        </section>
+
+
+        <!-- CHARTS -->
+        <section class="charts">
+
+            <div class="chart-card">
+
+                <h2>Transaction Analysis</h2>
+
+                <canvas id="transactionChart"></canvas>
+
+            </div>
+
+
+            <div class="chart-card">
+
+                <h2>Detection Result</h2>
+
+                <canvas id="fraudChart"></canvas>
+
+            </div>
+
+        </section>
+
+
+        <!-- TRANSACTION TABLE -->
+        <section class="table-section">
+
+            <div class="section-header">
+
+                <div>
+                    <h2>Transaction History</h2>
+                    <p>Processed transaction data and generated symbols</p>
+                </div>
+
+                <button onclick="runDetection()">
+                    Run Fraud Detection
+                </button>
+
+            </div>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Amount</th>
+                            <th>Type</th>
+                            <th>Location</th>
+                            <th>Time</th>
+                            <th>Symbol</th>
+                            <th>Status</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="transactionTable">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- AUTOMATA INFO -->
+        <section class="automata">
+
+            <h2>Automata Detection Flow</h2>
+
+            <div class="flow">
+
+                <div class="flow-box">
+                    Raw Transaction
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="flow-box">
+                    Symbol Conversion
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="flow-box">
+                    Regular Expression
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="flow-box">
+                    NFA / DFA
+                </div>
+
+                <div class="arrow">→</div>
+
+                <div class="flow-box result">
+                    Fraud Result
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <footer>
+            FinScan • Models of Computation Project
+        </footer>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>

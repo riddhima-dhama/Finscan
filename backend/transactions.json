@@ -1,0 +1,72 @@
+[
+    {
+        "id": 1,
+        "amount": 500,
+        "type": "purchase",
+        "location": "India",
+        "timestamp": "2026-09-09 10:00:00"
+    },
+    {
+        "id": 2,
+        "amount": 800,
+        "type": "purchase",
+        "location": "India",
+        "timestamp": "2026-09-09 10:15:00"
+    },
+    {
+        "id": 3,
+        "amount": 15000,
+        "type": "purchase",
+        "location": "India",
+        "timestamp": "2026-09-09 10:30:00"
+    },
+    {
+        "id": 4,
+        "amount": 25000,
+        "type": "purchase",
+        "location": "Foreign",
+        "timestamp": "2026-09-09 10:35:00"
+    },
+    {
+        "id": 5,
+        "amount": 300,
+        "type": "purchase",
+        "location": "India",
+        "timestamp": "2026-09-09 10:40:00"
+    },
+    {
+        "id": 6,
+        "amount": 18000,
+        "type": "purchase",
+        "location": "Foreign",
+        "timestamp": "2026-09-09 10:42:00"
+    },
+    {
+        "id": 7,
+        "amount": 200,
+        "type": "purchase",
+        "location": "India",
+        "timestamp": "2026-09-09 11:00:00"
+    },
+    {
+        "id": 8,
+        "amount": 22000,
+        "type": "purchase",
+        "location": "Foreign",
+        "timestamp": "2026-09-09 11:02:00"
+    },
+    {
+        "id": 9,
+        "amount": 400,
+        "type": "withdrawal",
+        "location": "India",
+        "timestamp": "2026-09-09 11:10:00"
+    },
+    {
+        "id": 10,
+        "amount": 12000,
+        "type": "purchase",
+        "location": "India",
+        "timestamp": "2026-09-09 11:20:00"
+    }
+]
