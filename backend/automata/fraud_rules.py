@@ -1,4 +1,5 @@
 FRAUD_RULES = {
+
     "High Value Foreign Transaction": {
         "pattern": "HF",
         "description": "High-value transaction from a foreign country"
@@ -9,14 +10,14 @@ FRAUD_RULES = {
         "description": "High-value transaction during unusual hours"
     },
 
-    "Repeated High Value Transaction": {
-        "pattern": "HRH",
-        "description": "Multiple high-value transactions occurring repeatedly"
+    "Repeated High Value Pattern": {
+        "pattern": "(HR)+",
+        "description": "One or more repeated high-value transaction patterns"
     },
 
-    "Foreign Odd Hour Transaction": {
-        "pattern": "FO",
-        "description": "Foreign transaction during unusual hours"
+    "Foreign or Odd Hour High Value Transaction": {
+        "pattern": "H(F|O)",
+        "description": "High-value transaction involving either a foreign location or unusual hour"
     },
 
     "Critical Fraud Pattern": {
