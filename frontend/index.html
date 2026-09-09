@@ -35,17 +35,17 @@
 
             <div class="card">
                 <h3>Total Transactions</h3>
-                <div class="number" id="totalTransactions">0</div>
+                <div class="number" id="total-transactions">0</div>
             </div>
 
             <div class="card">
                 <h3>Normal Transactions</h3>
-                <div class="number normal" id="normalTransactions">0</div>
+                <div class="number normal" id="normal-transactions">0</div>
             </div>
 
             <div class="card">
                 <h3>Fraud Alerts</h3>
-                <div class="number danger" id="fraudTransactions">0</div>
+                <div class="number danger" id="fraud-transactions">0</div>
             </div>
 
             <div class="card">
@@ -77,7 +77,33 @@
 
 
         <!-- CHARTS -->
-        <section class="charts">
+        
+    <!-- AUTOMATA STATE TRANSITION & SEQUENCE TRACER -->
+    <section class="charts" style="margin-top: 25px;">
+        <div class="chart-card" style="height: auto !important; min-height: 280px; padding: 20px; background: #1e293b; border-radius: 8px;">
+            <h2 style="color: #38bdf8; margin-bottom: 12px;">Automata State Transition Trace</h2>
+            <div id="automata-rules-list" style="margin-bottom: 15px; font-size: 0.9em; color: #cbd5e1;"></div>
+            <div id="state-diagram-viz" style="background: #0f172a; border-radius: 6px; padding: 15px; font-family: monospace; color: #a5f3fc; line-height: 1.8;">
+                Loading transition graph...
+            </div>
+        </div>
+
+        <div class="chart-card" style="height: auto !important; min-height: 280px; padding: 20px; background: #1e293b; border-radius: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h2 style="color: #38bdf8; margin: 0;">Upload & Trace Sequence</h2>
+                <label style="background: #38bdf8; color: #0f172a; padding: 6px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.85rem;">
+                    Upload JSON
+                    <input type="file" id="tx-file-input" accept=".json" style="display: none;" onchange="handleFileUpload(event)">
+                </label>
+            </div>
+            <p style="color: #94a3b8; font-size: 0.85em; margin-bottom: 10px;">Tokenized Transaction Alphabet: <strong>L</strong> (Low), <strong>M</strong> (Medium), <strong>H</strong> (High), <strong>F</strong> (Foreign), <strong>O</strong> (Odd Hour), <strong>R</strong> (Repeat)</p>
+            <div id="sequence-tracer" style="background: #0f172a; border-radius: 6px; padding: 15px; font-family: monospace; color: #34d399; min-height: 120px; white-space: pre-wrap;">
+Click "Run Fraud Detection" to trace sequence transition states.
+            </div>
+        </div>
+    </section>
+
+    <section class="charts">
 
             <div class="chart-card">
 
@@ -130,6 +156,7 @@
                             <th>Time</th>
                             <th>Symbol</th>
                             <th>Status</th>
+                <th>Matched Rule</th>
                         </tr>
 
                     </thead>

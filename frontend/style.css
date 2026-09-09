@@ -294,3 +294,17 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+.charts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.chart-card {
+    height: 320px !important;
+    position: relative;
+}
+
+.chart-card canvas {
+    max-height: 250px !important;
+}
