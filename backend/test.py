@@ -1,5 +1,4 @@
-from automata.symbols import transaction_to_symbols
-from automata.fraud_rules import FRAUD_RULES
+from automata.fraud_engine import detect_fraud
 
 
 transactions = [
@@ -36,17 +35,25 @@ transactions = [
 ]
 
 
-print("\nTRANSACTION SYMBOL TEST\n")
+print("\nFINSCAN FRAUD DETECTION TEST\n")
 
 for item in transactions:
-    symbols = transaction_to_symbols(item["data"])
 
-    print(f"Transaction: {item['name']}")
-    print(f"Symbols: {symbols}")
-    print("-" * 35)
+    result = detect_fraud(item["data"])
 
+    print("=" * 45)
+    print("Transaction:", item["name"])
+    print("Generated Symbols:", result["symbols"])
+    print("Fraud Detected:", result["is_fraud"])
 
-print("\nFRAUD RULES\n")
+    if result["matched_rules"]:
+        print("Matched Rules:")
 
-for rule, details in FRAUD_RULES.items():
-    print(f"{rule}: {details['pattern']}")
+        for rule in result["matched_rules"]:
+            print("-", rule["rule"])
+            print("  Pattern:", rule["pattern"])
+
+    else:
+        print("Matched Rules: None")
+
+print("=" * 45)
