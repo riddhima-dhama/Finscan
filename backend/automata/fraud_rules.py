@@ -2,26 +2,37 @@ FRAUD_RULES = {
 
     "High Value Foreign Transaction": {
         "pattern": "HF",
-        "description": "High-value transaction from a foreign country"
+        "description":
+            "High-value transaction from a foreign country"
     },
 
     "High Value Odd Hour Transaction": {
         "pattern": "HO",
-        "description": "High-value transaction during unusual hours"
+        "description":
+            "High-value transaction during unusual hours"
     },
 
-    "Repeated High Value Pattern": {
-        "pattern": "(HR)+",
-        "description": "One or more repeated high-value transaction patterns"
+    "High Value Foreign Odd Hour": {
+        "pattern": "HFO",
+        "description":
+            "High-value foreign transaction during unusual hours"
     },
 
-    "Foreign or Odd Hour High Value Transaction": {
-        "pattern": "H(F|O)",
-        "description": "High-value transaction involving either a foreign location or unusual hour"
+    "High Value Foreign Withdrawal": {
+        "pattern": "HFW",
+        "description":
+            "High-value foreign cash withdrawal"
+    },
+
+    "High Value Odd Hour Withdrawal": {
+        "pattern": "HOW",
+        "description":
+            "High-value withdrawal during unusual hours"
     },
 
     "Critical Fraud Pattern": {
-        "pattern": "HFOR",
-        "description": "High-value foreign transaction at an unusual hour with repeated activity"
+        "pattern": "HFOW",
+        "description":
+            "High-value foreign transaction during unusual hours using withdrawal"
     }
 }

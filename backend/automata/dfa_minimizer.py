@@ -1,132 +1,221 @@
-from automata.regex_to_nfa import regex_to_nfa
-from automata.nfa_to_dfa import nfa_to_dfa
-
+# =========================================================
+# DFA MINIMIZATION
+# =========================================================
 
 def minimize_dfa(dfa):
-    states = set(dfa["transitions"].keys())
+
+    transitions = dfa["transitions"]
+    alphabet = sorted(dfa["alphabet"])
+    start_state = dfa["start_state"]
     accept_states = set(dfa["accept_states"])
-    non_accept_states = states - accept_states
-    alphabet = dfa["alphabet"]
+
+    # -----------------------------------------------------
+    # Collect all DFA states
+    # -----------------------------------------------------
+
+    all_states = set()
+
+    all_states.add(start_state)
+    all_states.update(accept_states)
+
+    for state, symbol_map in transitions.items():
+
+        all_states.add(state)
+
+        for destination in symbol_map.values():
+            all_states.add(destination)
+
+    all_states = sorted(all_states)
+
+    # -----------------------------------------------------
+    # Make sure every state has every transition
+    #
+    # Missing transition -> dead state
+    # -----------------------------------------------------
+
+    dead_state = None
+
+    for state in all_states:
+
+        for symbol in alphabet:
+
+            if symbol not in transitions.get(state, {}):
+
+                if dead_state is None:
+                    dead_state = max(all_states) + 1
+
+                    all_states.append(dead_state)
+
+                    transitions[dead_state] = {}
+
+                transitions.setdefault(state, {})[symbol] = dead_state
+
+    # Dead state loops to itself
+    if dead_state is not None:
+
+        for symbol in alphabet:
+            transitions[dead_state][symbol] = dead_state
+
+    # -----------------------------------------------------
+    # Initial partition
+    #
+    # FINAL states vs NON-FINAL states
+    # -----------------------------------------------------
+
+    final_group = set(accept_states)
+
+    non_final_group = (
+        set(all_states) - final_group
+    )
 
     partitions = []
 
-    if accept_states:
-        partitions.append(accept_states)
+    if final_group:
+        partitions.append(final_group)
 
-    if non_accept_states:
-        partitions.append(non_accept_states)
+    if non_final_group:
+        partitions.append(non_final_group)
+
+    # -----------------------------------------------------
+    # Partition Refinement
+    # -----------------------------------------------------
 
     changed = True
 
     while changed:
+
         changed = False
+
+        state_to_group = {}
+
+        for group_index, group in enumerate(partitions):
+
+            for state in group:
+                state_to_group[state] = group_index
+
         new_partitions = []
 
         for group in partitions:
-            transition_groups = {}
+
+            buckets = {}
 
             for state in group:
-                signature = []
 
-                for symbol in sorted(alphabet):
-                    next_state = dfa["transitions"].get(
-                        state, {}
-                    ).get(symbol)
+                signature = tuple(
+                    state_to_group[
+                        transitions[state][symbol]
+                    ]
+                    for symbol in alphabet
+                )
 
-                    target_group = None
+                if signature not in buckets:
+                    buckets[signature] = set()
 
-                    if next_state is not None:
-                        for index, partition in enumerate(partitions):
-                            if next_state in partition:
-                                target_group = index
-                                break
+                buckets[signature].add(state)
 
-                    signature.append(target_group)
-
-                signature = tuple(signature)
-
-                if signature not in transition_groups:
-                    transition_groups[signature] = set()
-
-                transition_groups[signature].add(state)
+            if len(buckets) > 1:
+                changed = True
 
             new_partitions.extend(
-                transition_groups.values()
+                buckets.values()
             )
-
-            if len(transition_groups) > 1:
-                changed = True
 
         partitions = new_partitions
 
-    state_mapping = {}
+    # -----------------------------------------------------
+    # Sort partitions so numbering is stable
+    #
+    # Start-state group becomes M0
+    # -----------------------------------------------------
+
+    start_group_index = None
 
     for index, group in enumerate(partitions):
-        for state in group:
-            state_mapping[state] = index
 
-    minimized_transitions = {}
+        if start_state in group:
+            start_group_index = index
+            break
 
-    for index, group in enumerate(partitions):
-        representative = next(iter(group))
-        minimized_transitions[index] = {}
+    if start_group_index is not None:
 
-        for symbol, next_state in dfa["transitions"].get(
-            representative, {}
-        ).items():
+        start_group = partitions.pop(
+            start_group_index
+        )
 
-            minimized_transitions[index][symbol] = \
-                state_mapping[next_state]
+        partitions.insert(
+            0,
+            start_group
+        )
 
-    minimized_accept_states = set()
+    # -----------------------------------------------------
+    # Assign minimized state numbers
+    # -----------------------------------------------------
 
-    for index, group in enumerate(partitions):
+    state_map = {}
+
+    state_groups = {}
+
+    for min_state, group in enumerate(partitions):
+
+        state_groups[min_state] = set(group)
+
+        for original_state in group:
+
+            state_map[original_state] = min_state
+
+    # -----------------------------------------------------
+    # Build minimized transitions
+    # -----------------------------------------------------
+
+    min_transitions = {}
+
+    for min_state, group in state_groups.items():
+
+        representative = sorted(group)[0]
+
+        min_transitions[min_state] = {}
+
+        for symbol in alphabet:
+
+            destination = transitions[
+                representative
+            ][symbol]
+
+            min_transitions[min_state][symbol] = (
+                state_map[destination]
+            )
+
+    # -----------------------------------------------------
+    # Minimized accepting states
+    # -----------------------------------------------------
+
+    min_accept_states = set()
+
+    for min_state, group in state_groups.items():
+
         if group & accept_states:
-            minimized_accept_states.add(index)
+            min_accept_states.add(min_state)
 
-    minimized_start = state_mapping[dfa["start_state"]]
+    # -----------------------------------------------------
+    # Return minimized DFA
+    # -----------------------------------------------------
 
     return {
-        "start_state": minimized_start,
-        "accept_states": minimized_accept_states,
-        "transitions": minimized_transitions,
-        "alphabet": alphabet,
-        "partitions": partitions
+
+        "start_state": 0,
+
+        "accept_states": min_accept_states,
+
+        "transitions": min_transitions,
+
+        "alphabet": set(alphabet),
+
+        # IMPORTANT:
+        # Mapping from minimized states
+        # to original DFA states
+        "state_groups": state_groups,
+
+        # Mapping from original DFA states
+        # to minimized DFA states
+        "state_map": state_map
     }
-
-
-def print_minimized_dfa(dfa):
-    print("\nMINIMIZED DFA TRANSITIONS")
-
-    for state in sorted(dfa["transitions"]):
-        for symbol, next_state in dfa["transitions"][state].items():
-            print(f"M{state} --{symbol}--> M{next_state}")
-
-    print(f"\nStart State: M{dfa['start_state']}")
-
-    accept = sorted(dfa["accept_states"])
-    print(
-        "Accept States:",
-        ", ".join(f"M{x}" for x in accept)
-    )
-
-
-if __name__ == "__main__":
-    regex = "(HF)+"
-
-    print("Regex:", regex)
-
-    nfa = regex_to_nfa(regex)
-    dfa = nfa_to_dfa(nfa)
-
-    print("\nOriginal DFA States:",
-          len(dfa["transitions"]))
-
-    minimized_dfa = minimize_dfa(dfa)
-
-    print(
-        "Minimized DFA States:",
-        len(minimized_dfa["transitions"])
-    )
-
-    print_minimized_dfa(minimized_dfa)

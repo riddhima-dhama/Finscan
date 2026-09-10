@@ -1,210 +1,609 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>FinScan - Fraud Detection</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    <link rel="stylesheet" href="style.css">
+    <title>FinScan - Automata Fraud Detection</title>
 
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+        rel="stylesheet"
+        href="style.css?v=999"
+    >
+
 </head>
+
 
 <body>
 
-    <div class="container">
+<div class="app">
+
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                F
+            </div>
+
+            <div>
+
+                <h1>FinScan</h1>
+
+                <span>
+                    Automata Security
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <nav>
+
+            <a
+                href="#dashboard"
+                class="nav-item active"
+            >
+                Dashboard
+            </a>
+
+            <a
+                href="#visualizer"
+                class="nav-item"
+            >
+                Automata Visualizer
+            </a>
+
+            <a
+                href="#transactions"
+                class="nav-item"
+            >
+                Transactions
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-footer">
+
+            <div class="status-dot"></div>
+
+            Automata Engine Online
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- =====================================================
+         MAIN
+         ===================================================== -->
+
+    <main class="main">
+
 
         <!-- HEADER -->
-        <header>
+
+        <header class="topbar">
+
             <div>
-                <h1>FinScan</h1>
-                <p>Finite Automata Based Fraud Detection System</p>
+
+                <h2 id="dashboard">
+                    Financial Fraud Detection
+                </h2>
+
+                <p>
+                    Rule-based detection using
+                    Finite Automata
+                </p>
+
             </div>
 
-            <div class="status">
+
+            <div class="engine-status">
+
                 <span class="status-dot"></span>
-                System Online
+
+                SYSTEM ONLINE
+
             </div>
+
         </header>
 
 
-        <!-- STAT CARDS -->
-        <section class="stats">
 
-            <div class="card">
-                <h3>Total Transactions</h3>
-                <div class="number" id="total-transactions">0</div>
-            </div>
+        <!-- =================================================
+             STAT CARDS
+             ================================================= -->
 
-            <div class="card">
-                <h3>Normal Transactions</h3>
-                <div class="number normal" id="normal-transactions">0</div>
-            </div>
+        <section class="stats-grid">
 
-            <div class="card">
-                <h3>Fraud Alerts</h3>
-                <div class="number danger" id="fraud-transactions">0</div>
-            </div>
+            <div class="stat-card">
 
-            <div class="card">
-                <h3>Detection Engine</h3>
-                <div class="engine">ACTIVE</div>
-            </div>
-
-        </section>
-
-
-        <!-- ALERT -->
-        <section id="alertBox" class="alert hidden">
-
-            <div>
-                <h2>🚨 Fraud Detected</h2>
-
-                <p>
-                    Rule:
-                    <strong id="fraudRule">-</strong>
-                </p>
-
-                <p>
-                    Symbol Sequence:
-                    <strong id="symbolSequence">-</strong>
-                </p>
-            </div>
-
-        </section>
-
-
-        <!-- CHARTS -->
-        
-    <!-- AUTOMATA STATE TRANSITION & SEQUENCE TRACER -->
-    <section class="charts" style="margin-top: 25px;">
-        <div class="chart-card" style="height: auto !important; min-height: 280px; padding: 20px; background: #1e293b; border-radius: 8px;">
-            <h2 style="color: #38bdf8; margin-bottom: 12px;">Automata State Transition Trace</h2>
-            <div id="automata-rules-list" style="margin-bottom: 15px; font-size: 0.9em; color: #cbd5e1;"></div>
-            <div id="state-diagram-viz" style="background: #0f172a; border-radius: 6px; padding: 15px; font-family: monospace; color: #a5f3fc; line-height: 1.8;">
-                Loading transition graph...
-            </div>
-        </div>
-
-        <div class="chart-card" style="height: auto !important; min-height: 280px; padding: 20px; background: #1e293b; border-radius: 8px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                <h2 style="color: #38bdf8; margin: 0;">Upload & Trace Sequence</h2>
-                <label style="background: #38bdf8; color: #0f172a; padding: 6px 12px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 0.85rem;">
-                    Upload JSON
-                    <input type="file" id="tx-file-input" accept=".json" style="display: none;" onchange="handleFileUpload(event)">
-                </label>
-            </div>
-            <p style="color: #94a3b8; font-size: 0.85em; margin-bottom: 10px;">Tokenized Transaction Alphabet: <strong>L</strong> (Low), <strong>M</strong> (Medium), <strong>H</strong> (High), <strong>F</strong> (Foreign), <strong>O</strong> (Odd Hour), <strong>R</strong> (Repeat)</p>
-            <div id="sequence-tracer" style="background: #0f172a; border-radius: 6px; padding: 15px; font-family: monospace; color: #34d399; min-height: 120px; white-space: pre-wrap;">
-Click "Run Fraud Detection" to trace sequence transition states.
-            </div>
-        </div>
-    </section>
-
-    <section class="charts">
-
-            <div class="chart-card">
-
-                <h2>Transaction Analysis</h2>
-
-                <canvas id="transactionChart"></canvas>
-
-            </div>
-
-
-            <div class="chart-card">
-
-                <h2>Detection Result</h2>
-
-                <canvas id="fraudChart"></canvas>
-
-            </div>
-
-        </section>
-
-
-        <!-- TRANSACTION TABLE -->
-        <section class="table-section">
-
-            <div class="section-header">
-
-                <div>
-                    <h2>Transaction History</h2>
-                    <p>Processed transaction data and generated symbols</p>
+                <div class="stat-label">
+                    Total Transactions
                 </div>
 
-                <button onclick="runDetection()">
+                <div
+                    class="stat-value"
+                    id="total-transactions"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="stat-card normal-card">
+
+                <div class="stat-label">
+                    Normal
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="normal-transactions"
+                >
+                    0
+                </div>
+
+            </div>
+
+
+            <div class="stat-card fraud-card">
+
+                <div class="stat-label">
+                    Fraud Detected
+                </div>
+
+                <div
+                    class="stat-value"
+                    id="fraud-transactions"
+                >
+                    0
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             AUTOMATA VISUALIZER
+             ================================================= -->
+
+        <section
+            class="section"
+            id="visualizer"
+        >
+
+            <div class="section-heading">
+
+                <div>
+
+                    <h2>
+                        Automata Theory Visualizer
+                    </h2>
+
+                    <p>
+                        Regular Expression →
+                        NFA → DFA →
+                        Minimized DFA
+                    </p>
+
+                </div>
+
+                <div class="theory-badge">
+                    MODELS OF COMPUTATION
+                </div>
+
+            </div>
+
+
+
+            <!-- REGEX CONTROL -->
+
+            <div class="regex-panel">
+
+                <div class="regex-label">
+
+                    <span>
+                        Enter Regular Expression
+                    </span>
+
+                    <span class="regex-help">
+                        Example: 01 &nbsp;|&nbsp; 0*1 &nbsp;|&nbsp; (01)*
+                    </span>
+
+                </div>
+
+
+                <div class="regex-controls">
+
+                    <input
+                        id="regex-input"
+                        type="text"
+                        value="01"
+                        placeholder="Enter regex..."
+                        autocomplete="off"
+                    >
+
+                    <button
+                        id="generate-automata-btn"
+                        onclick="generateAutomata()"
+                    >
+                        Generate Automata
+                    </button>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- AUTOMATA COUNTS -->
+
+            <div class="automata-stat-row">
+
+                <div class="automata-stat">
+
+                    <span>
+                        NFA States
+                    </span>
+
+                    <strong id="nfa-count">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="automata-stat">
+
+                    <span>
+                        DFA States
+                    </span>
+
+                    <strong id="dfa-count">
+                        -
+                    </strong>
+
+                </div>
+
+
+                <div class="automata-stat">
+
+                    <span>
+                        Min DFA States
+                    </span>
+
+                    <strong id="min-dfa-count">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- NFA -->
+
+            <div class="automata-card">
+
+                <div class="automata-card-header">
+
+                    <div>
+
+                        <h3>
+                            Regex → NFA
+                        </h3>
+
+                        <p>
+                            Thompson's Construction
+                        </p>
+
+                    </div>
+
+                    <div class="automata-badge">
+                        NFA
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="nfa-graph"
+                    class="graph-container"
+                >
+
+                    <div class="graph-placeholder">
+                        Enter a regex and click
+                        Generate Automata
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- DFA -->
+
+            <div class="automata-card">
+
+                <div class="automata-card-header">
+
+                    <div>
+
+                        <h3>
+                            NFA → DFA
+                        </h3>
+
+                        <p>
+                            Subset Construction
+                        </p>
+
+                    </div>
+
+                    <div class="automata-badge">
+                        DFA
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="dfa-graph"
+                    class="graph-container"
+                >
+
+                    <div class="graph-placeholder">
+                        DFA will appear here
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- MIN DFA -->
+
+            <div class="automata-card">
+
+                <div class="automata-card-header">
+
+                    <div>
+
+                        <h3>
+                            DFA → Minimized DFA
+                        </h3>
+
+                        <p>
+                            DFA State Minimization
+                        </p>
+
+                    </div>
+
+                    <div class="automata-badge">
+                        MIN DFA
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="min-dfa-graph"
+                    class="graph-container"
+                >
+
+                    <div class="graph-placeholder">
+                        Minimized DFA will appear here
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- =================================================
+             TRANSACTION DETECTION
+             ================================================= -->
+
+        <section
+            class="section"
+            id="transactions"
+        >
+
+            <div class="section-heading">
+
+                <div>
+
+                    <h2>
+                        Fraud Detection
+                    </h2>
+
+                    <p>
+                        Analyze transactions using
+                        the automata engine
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="action-panel">
+
+                <button
+                    class="primary-button"
+                    onclick="runDetection()"
+                >
                     Run Fraud Detection
                 </button>
 
+
+                <label class="upload-button">
+
+                    Upload JSON
+
+                    <input
+                        type="file"
+                        id="json-upload"
+                        accept=".json"
+                        onchange="handleFileUpload(event)"
+                    >
+
+                </label>
+
             </div>
 
 
-            <div class="table-container">
 
-                <table>
+            <!-- DETECTION RESULT -->
 
-                    <thead>
+            <div
+                id="detection-result"
+                class="detection-result hidden"
+            >
 
-                        <tr>
-                            <th>ID</th>
-                            <th>Amount</th>
-                            <th>Type</th>
-                            <th>Location</th>
-                            <th>Time</th>
-                            <th>Symbol</th>
-                            <th>Status</th>
-                <th>Matched Rule</th>
-                        </tr>
+                <div>
 
-                    </thead>
+                    <span>
+                        Detection Result
+                    </span>
 
-                    <tbody id="transactionTable">
+                    <strong id="detection-status">
+                        -
+                    </strong>
 
-                    </tbody>
+                </div>
 
-                </table>
+                <div>
+
+                    <span>
+                        Matched Rule
+                    </span>
+
+                    <strong id="detection-rule">
+                        -
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- SEQUENCE TRACE -->
+
+            <div class="trace-card">
+
+                <div class="card-title">
+                    Automata Execution Trace
+                </div>
+
+                <pre id="sequence-tracer">
+Run fraud detection to see the execution trace.
+                </pre>
+
+            </div>
+
+
+
+            <!-- TABLE -->
+
+            <div class="table-card">
+
+                <div class="card-title">
+                    Transaction History
+                </div>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>ID</th>
+                                <th>Amount</th>
+                                <th>Type</th>
+                                <th>Country</th>
+                                <th>Time</th>
+                                <th>Symbols</th>
+                                <th>Status</th>
+                                <th>Matched Rule</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="transactionTable">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
 
             </div>
 
         </section>
 
 
-        <!-- AUTOMATA INFO -->
-        <section class="automata">
 
-            <h2>Automata Detection Flow</h2>
+        <!-- =================================================
+             CHARTS
+             ================================================= -->
 
-            <div class="flow">
+        <section class="charts-grid">
 
-                <div class="flow-box">
-                    Raw Transaction
+            <div class="chart-card">
+
+                <div class="card-title">
+                    Normal vs Fraud
                 </div>
 
-                <div class="arrow">→</div>
+                <div class="chart-wrapper">
 
-                <div class="flow-box">
-                    Symbol Conversion
+                    <canvas id="fraudChart"></canvas>
+
                 </div>
 
-                <div class="arrow">→</div>
+            </div>
 
-                <div class="flow-box">
-                    Regular Expression
+
+            <div class="chart-card">
+
+                <div class="card-title">
+                    Transaction Amounts
                 </div>
 
-                <div class="arrow">→</div>
+                <div class="chart-wrapper">
 
-                <div class="flow-box">
-                    NFA / DFA
-                </div>
+                    <canvas id="transactionChart"></canvas>
 
-                <div class="arrow">→</div>
-
-                <div class="flow-box result">
-                    Fraud Result
                 </div>
 
             </div>
@@ -212,14 +611,28 @@ Click "Run Fraud Detection" to trace sequence transition states.
         </section>
 
 
-        <footer>
-            FinScan • Models of Computation Project
-        </footer>
+    </main>
 
-    </div>
+</div>
 
 
-    <script src="script.js"></script>
+<!-- =========================================================
+     LIBRARIES
+     ========================================================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/viz.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/viz.js/2.1.2/full.render.js"></script>
+
+
+<!-- IMPORTANT: ONLY ONE SCRIPT.JS -->
+
+<script src="./script.js?v=999"></script>
+
 
 </body>
+
 </html>
